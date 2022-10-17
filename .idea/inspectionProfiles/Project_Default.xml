@@ -1,0 +1,21 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="cv2.*" />
+          <option value="matplotlip.pyplot" />
+          <option value="scrapy.utils.markup" />
+          <option value="ScrapyTutorial.ScrapyTutorial.spiders.scrapyTutorial.to_utf8" />
+          <option value="ScrapyTutorial.ScrapyTutorial.spiders.scrapyTutorial.writerow" />
+          <option value="tutorial.tutorial.spiders.teslAllUrl.DanTriItem" />
+          <option value="tutorial.tutorial.spiders.test2.MariadbPipeline" />
+          <option value="tutorial.tutorial.spiders.teslAllUrl.*" />
+          <option value="tutorial.tutorial.spiders.test.DanTriItem" />
+          <option value="tutorial.tutorial.spiders.test.*" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
