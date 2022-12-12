@@ -1,8 +1,6 @@
 
 import scrapy
 from scrapy.item import Item, Field
-
-
 class CrawBaoDanTri(scrapy.Item):
     danhmuc = scrapy.Field()
     title = scrapy.Field()
@@ -10,6 +8,7 @@ class CrawBaoDanTri(scrapy.Item):
     image = scrapy.Field()
     timeupdate = scrapy.Field()
     url = scrapy.Field()
+    tag = scrapy.Field()
     pass
 
 

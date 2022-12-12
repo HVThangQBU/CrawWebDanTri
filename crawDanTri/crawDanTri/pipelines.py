@@ -76,48 +76,76 @@ class MariadbPipeline:
 
             client = Client('http://localhost/wordpress/wordpress/xmlrpc.php',
                             'admin', 'AX5Z kH3C o9M3 v0Xd NvC8 5hXC')
-            self.cur.execute("""SELECT * from baivietdantri WHERE danhmuc = ?
-                                        """,
-                         (
-                             str(item['danhmuc']),
-                         ))
-            records = self.cur.fetchall()
-            for row in records:
-                #goi uploading.py -> post_id
-                post_danhmuc = row[1]
-                post_title = row[2]
-                post_body = row[3]
-                post_time = row[5]
-                url_img = row[4]
-                # name = random.randrange(10000000, 100000000)
-                # fullname = str(name) + ".jpg"
-                # urllib.request.urlretrieve(url_img, fullname)
-                raw = requests.get(url_img).content
-                with NamedTemporaryFile(delete=False, mode="wb", suffix=".jpg") as img:
-                    img.write(raw)
-                    # print(f.file())
-                    c = open(img.name, "rb")
-                    filename = img.name
-                    data = {
-                        'name': filename,
-                        'type': 'image/jpeg',  # mimetype
-                    }
-                    # read the binary file and let the XMLRPC library encode it into base64
-                    with open(filename, 'rb') as img:
-                        data['bits'] = xmlrpc_client.Binary(img.read())
 
-                    response = client.call(media.UploadFile(data))
-                attachment_id = response['id']
-                post = WordPressPost()
-                post.title = post_title
-                post.content = post_body
-                post.post_status = 'publish'
-                post.terms_names = {
-                    'post_tag': ['Báo Dân Trí'],
-                    'category': [post_danhmuc],
+            raw = requests.get(item['image']).content
+            with NamedTemporaryFile(delete=False, mode="wb", suffix=".jpg") as img:
+                img.write(raw)
+                # print(f.file())
+                c = open(img.name, "rb")
+                filename = img.name
+                data = {
+                    'name': filename,
+                    'type': 'image/jpeg',  # mimetype
                 }
-                post.thumbnail = attachment_id
-                post.id = client.call(posts.NewPost(post))
+                # read the binary file and let the XMLRPC library encode it into base64
+                with open(filename, 'rb') as img:
+                    data['bits'] = xmlrpc_client.Binary(img.read())
+
+                response = client.call(media.UploadFile(data))
+            attachment_id = response['id']
+            post = WordPressPost()
+            post.title = item['title']
+            post.content = item['content']
+            post.post_status = 'publish'
+            post.terms_names = {
+                'post_tag': [item['tag']],
+                'category': [item['danhmuc']],
+            }
+            post.thumbnail = attachment_id
+            post.id = client.call(posts.NewPost(post))
+
+            # self.cur.execute("""SELECT * from baivietdantri WHERE danhmuc = ?
+            #                             """,
+            #              (
+            #                  str(item['danhmuc']),
+            #              ))
+            # records = self.cur.fetchall()
+            # for row in records:
+            #     #goi uploading.py -> post_id
+            #     post_danhmuc = row[1]
+            #     post_title = row[2]
+            #     post_body = row[3]
+            #     post_time = row[5]
+            #     url_img = row[4]
+            #     # name = random.randrange(10000000, 100000000)
+            #     # fullname = str(name) + ".jpg"
+            #     # urllib.request.urlretrieve(url_img, fullname)
+            #     raw = requests.get(url_img).content
+            #     with NamedTemporaryFile(delete=False, mode="wb", suffix=".jpg") as img:
+            #         img.write(raw)
+            #         # print(f.file())
+            #         c = open(img.name, "rb")
+            #         filename = img.name
+            #         data = {
+            #             'name': filename,
+            #             'type': 'image/jpeg',  # mimetype
+            #         }
+            #         # read the binary file and let the XMLRPC library encode it into base64
+            #         with open(filename, 'rb') as img:
+            #             data['bits'] = xmlrpc_client.Binary(img.read())
+            #
+            #         response = client.call(media.UploadFile(data))
+            #     attachment_id = response['id']
+            #     post = WordPressPost()
+            #     post.title = post_title
+            #     post.content = post_body
+            #     post.post_status = 'publish'
+            #     post.terms_names = {
+            #         'post_tag': ['Báo Dân Trí'],
+            #         'category': [post_danhmuc],
+            #     }
+            #     post.thumbnail = attachment_id
+            #     post.id = client.call(posts.NewPost(post))
 
 
     def close_spider(self, spider):

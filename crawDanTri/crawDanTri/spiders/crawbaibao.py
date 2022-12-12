@@ -3,13 +3,11 @@ from scrapy.spiders import CrawlSpider, Rule
 import re
 
 from crawDanTri.items import CrawBaoDanTri
-
 def listToString(s):
     str1 = ""
     for ele in s:
         str1 += ele
     return str1
-
 def strip_value(value):
     m = re.search("http[^\s]+(\s)*h?(http[^\s>]+)(\s)*", value)
     if m:
@@ -28,7 +26,6 @@ class ToScrapeSpiderXPath(CrawlSpider):
     # print(start_urls)
     f.close()
     rules = (
-
         Rule(LinkExtractor(allow='',
                            deny=['/abc/'],
                            process_value=strip_value,
@@ -53,12 +50,13 @@ class ToScrapeSpiderXPath(CrawlSpider):
         content = content2[0]  + '</article>'
         print("consolog",content)
         item['content'] = content
-        image = response.xpath(
-            ".//div[@class='singular-content']/figure[@class='image align-center']/img/@src | //figure[@class='image']/img/@src").get()
+        image = response.xpath(".//div[@class='singular-content']/figure[@class='image align-center']/img/@src | //figure[@class='image']/img/@src").get()
         item['image'] = str(image)
         timeupdate = response.xpath(".//time[@class='author-time']/text()").get()
         item['timeupdate'] = timeupdate
         url = response.request.url
         item['url'] = str(url)
+        tag = response.xpath("//ul[@class='tags-wrap mt-30']/li/a/text()").get()
+        item['tag'] = str(tag)
         yield item
 
